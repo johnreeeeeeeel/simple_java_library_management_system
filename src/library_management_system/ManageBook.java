@@ -202,8 +202,31 @@ public class ManageBook {
                     current.next.prev = current.prev;
                 }
                 
-                System.out.println("\nBook deleted successfully!");
+                // Bloom filter updation
+                Main.bookIdFilter = new BloomFilter(1000);
+                Main.bookNumberFilter = new BloomFilter(1000);
+                Main.bookTitleFilter = new BloomFilter(1000);
+                Main.bookAuthorFilter = new BloomFilter(1000);
+                Main.bookLocationFilter = new BloomFilter(1000);
+                Main.bookStatusFilter = new BloomFilter(1000);
                 
+                BookNode temp = head;
+
+                while (temp != null) {
+                    Book book = temp.data;
+
+                    Main.bookIdFilter.add(String.valueOf(book.getBookId()));
+                    Main.bookNumberFilter.add(book.getBookNumber());
+                    Main.bookTitleFilter.add(book.getBookTitle());
+                    Main.bookAuthorFilter.add(book.getBookAuthor());
+                    Main.bookLocationFilter.add(book.getBookLocation());
+                    Main.bookStatusFilter.add(book.getBookStatus());
+
+                    temp = temp.next;
+                }
+                
+                System.out.println("\nBook deleted successfully!");
+                                
                 System.out.printf(
                     "\n%-15s %-15s %-30s %-20s %-12s %-12s%n",
                     "ID", "BOOK NO.", "TITLE", "AUTHOR", "LOCATION", "STATUS"
@@ -265,11 +288,12 @@ public class ManageBook {
         System.out.println("\n==============================");
         System.out.println("SEARCH BOOK");
         
-        System.out.print("Enter book number, title or author: ");
+        System.out.println("Search By: Book ID, Number, Title, Author, Location, or Status.");
+        System.out.print("Enter: ");
         String input = scanner.nextLine();
         
         // Bloom filter validation
-        if (!Main.bookNumberFilter.mightContain(input) && !Main.bookTitleFilter.mightContain(input) && !Main.bookAuthorFilter.mightContain(input)) {
+        if (!Main.bookIdFilter.mightContain(input) && !Main.bookNumberFilter.mightContain(input) && !Main.bookTitleFilter.mightContain(input) && !Main.bookAuthorFilter.mightContain(input) && !Main.bookLocationFilter.mightContain(input) && !Main.bookStatusFilter.mightContain(input)) {
             System.out.println("\n" + input + " not found.");
             return;
         }
@@ -280,7 +304,7 @@ public class ManageBook {
         while (current != null) {
             Book book = current.data;
 
-            if ((String.valueOf(book.getBookId()).equalsIgnoreCase(input)) || book.getBookNumber().equalsIgnoreCase(input) || book.getBookTitle().equalsIgnoreCase(input) || book.getBookAuthor().equalsIgnoreCase(input)) {
+            if ((String.valueOf(book.getBookId()).equalsIgnoreCase(input)) || book.getBookNumber().equalsIgnoreCase(input) || book.getBookTitle().equalsIgnoreCase(input) || book.getBookAuthor().equalsIgnoreCase(input) || book.getBookLocation().equalsIgnoreCase(input) || book.getBookStatus().equalsIgnoreCase(input)) {
 
                 System.out.println("\nRESULT");
                 
@@ -306,7 +330,7 @@ public class ManageBook {
         }
 
         if (!found) {            
-            System.out.println("No books available yet.");
+            System.out.println("\nNo Books found.");
         }
     }
 }

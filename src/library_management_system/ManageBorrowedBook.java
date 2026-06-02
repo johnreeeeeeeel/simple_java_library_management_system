@@ -29,7 +29,7 @@ public class ManageBorrowedBook {
         String bookNumber = scanner.nextLine();
         
         // Bloom filter validation
-        if (Main.bookBorrowedFilter.mightContain(bookNumber)) {
+        if (Main.borrowedBookNumberFilter.mightContain(bookNumber)) {
             System.out.println("\nBook number " + bookNumber + " already borrowed.");
             return;
         }
@@ -66,17 +66,19 @@ public class ManageBorrowedBook {
         }
         
         // Bloom filter insertion
-        Main.bookBorrowedFilter.add(bookNumber);
+        Main.borrowedTransactionNumberFilter.add(String.valueOf(transactionNumber));
+        Main.borrowedBookNumberFilter.add(bookNumber);
+        Main.borrowedBookNumberFilter.add(studentName);
 
         System.out.println("\nBook borrowed successfully!");
         
         System.out.printf(
-            "\n%-15s %-15s %-30s %-20s %-30s %-10s %-10s%n",
+            "\n%-20s %-15s %-30s %-20s %-30s %-10s %-10s%n",
             "TRANSACTION NO.", "BOOK NO.", "TITLE", "AUTHOR", "STUDENT NAME", "YEAR", "SET"
         );
 
         System.out.printf(
-            "%-15d %-15s %-30s %-20s %-30s %-10s %-10s%n",
+            "%-20s %-15s %-30s %-20s %-30s %-10s %-10s%n",
             borrowedBook.getTransactionNumber(),
             book.getBookNumber(),
             book.getBookTitle(),
@@ -91,12 +93,12 @@ public class ManageBorrowedBook {
         System.out.println("\n==============================");
         System.out.println("RETURN BOOK");
 
-        System.out.print("Enter book number: ");
-        String bookNumber = scanner.nextLine();
+        System.out.print("Enter book or transaction number: ");
+        String input = scanner.nextLine().trim();
 
-        // Bloom filter validation
-        if (!Main.bookBorrowedFilter.mightContain(bookNumber)) {
-            System.out.println("\nBook number " + bookNumber + " is not currently borrowed.");
+        // Bloom filter validation 
+        if (!Main.borrowedBookNumberFilter.mightContain(input) && !Main.borrowedTransactionNumberFilter.mightContain(input)) {
+            System.out.println("\nBook/Transaction number " + input + " is not currently borrowed.");
             return;
         }
 
@@ -106,9 +108,11 @@ public class ManageBorrowedBook {
         while (current != null) {
             BorrowedBook borrowedBook = current.data;
 
-            if (borrowedBook.getBook().getBookNumber().equalsIgnoreCase(bookNumber)) {
+            if (borrowedBook.getBook().getBookNumber().equalsIgnoreCase(input)
+                    || String.valueOf(borrowedBook.getTransactionNumber()).equals(input)) {
+
                 borrowedBook.getBook().setBookStatus("Available");
-                
+
                 if (current == head) {
                     head = current.next;
                     if (head != null) head.prev = null;
@@ -122,23 +126,26 @@ public class ManageBorrowedBook {
                     current.next.prev = current.prev;
                 }
 
-                Main.bookBorrowedFilter = new BloomFilter(1000);
+                // Bloom filter updation
+                Main.borrowedTransactionNumberFilter = new BloomFilter(1000);
+                Main.borrowedBookNumberFilter = new BloomFilter(1000);
+                Main.studentNameFilter = new BloomFilter(1000);
 
                 BorrowedBookNode temp = head;
                 while (temp != null) {
-                    Main.bookBorrowedFilter.add(temp.data.getBook().getBookNumber());
+                    Main.borrowedBookNumberFilter.add(temp.data.getBook().getBookNumber());
                     temp = temp.next;
                 }
 
                 System.out.println("\nBook returned successfully!");
-                
+
                 System.out.printf(
-                    "\n%-15s %-15s %-30s %-20s %-30s %-10s %-10s%n",
+                    "\n%-20s %-15s %-30s %-20s %-30s %-10s %-10s%n",
                     "TRANSACTION NO.", "BOOK NO.", "TITLE", "AUTHOR", "STUDENT NAME", "YEAR", "SET"
                 );
 
                 System.out.printf(
-                    "%-15d %-15s %-30s %-20s %-30s %-10s %-10s%n",
+                    "%-20s %-15s %-30s %-20s %-30s %-10s %-10s%n",
                     borrowedBook.getTransactionNumber(),
                     borrowedBook.getBook().getBookNumber(),
                     borrowedBook.getBook().getBookTitle(),
@@ -156,8 +163,6 @@ public class ManageBorrowedBook {
         }
 
         if (!found) {
-            System.out.println("\nRETURN BOOK");
-            
             System.out.println("\nBorrowed book not found.");
         }
     }
@@ -168,18 +173,16 @@ public class ManageBorrowedBook {
 
         current = head;
 
-        int i = 1;
-
         while (current != null) {
             BorrowedBook borrowedBook = current.data;
 
             System.out.printf(
-                "\n%-15s %-15s %-30s %-20s %-10s %-12s %-30s %-10s %-10s%n",
+                "\n%-20s %-15s %-30s %-20s %-10s %-12s %-30s %-10s %-10s%n",
                 "TRANSACTION NO.", "BOOK NO.", "TITLE", "AUTHOR", "LOCATION", "STATUS", "STUDENT NAME", "YEAR", "SET"
             );
 
             System.out.printf(
-                "%-15s %-15s %-30s %-20s %-10s %-12s %-30s %-10s %-10s%n",
+                "%-20s %-15s %-30s %-20s %-10s %-12s %-30s %-10s %-10s%n",
                 borrowedBook.getTransactionNumber(),
                 borrowedBook.getBook().getBookNumber(),
                 borrowedBook.getBook().getBookTitle(),
@@ -195,8 +198,7 @@ public class ManageBorrowedBook {
         }
         
         if (head == null) {
-            System.out.println("No borrowed books yet");
-            return;
+            System.out.println("\nNo borrowed books yet.");
         }
     }
     
@@ -204,11 +206,12 @@ public class ManageBorrowedBook {
         System.out.println("\n==============================");
         System.out.println("SEARCH BORROWED BOOK");
         
-        System.out.print("Enter book number, title, author or student name: ");
+        System.out.println("Search By: Book ID, Number, Title, Transaction Number or Student Name.");
+        System.out.print("Enter: ");
         String input = scanner.nextLine();
         
         // Bloom filter validation
-        if (!Main.bookNumberFilter.mightContain(input) && !Main.bookTitleFilter.mightContain(input) && !Main.bookAuthorFilter.mightContain(input) && !Main.bookBorrowedFilter.mightContain(input)) {
+        if (!Main.bookIdFilter.mightContain(input) && !Main.bookNumberFilter.mightContain(input) && !Main.bookTitleFilter.mightContain(input) && !Main.borrowedTransactionNumberFilter.mightContain(input) && !Main.studentNameFilter.mightContain(input)) {
             System.out.println("\n" + input + " not found.");
             return;
         }
@@ -229,12 +232,12 @@ public class ManageBorrowedBook {
                 System.out.println("\nRESULT");
 
                 System.out.printf(
-                    "\n%-15s %-15s %-30s %-20s %-10s %-12s %-30s %-10s %-10s%n",
+                    "\n%-20s %-15s %-30s %-20s %-10s %-12s %-30s %-10s %-10s%n",
                     "TRANSACTION NO.", "BOOK NO.", "TITLE", "AUTHOR", "LOCATION", "STATUS", "STUDENT NAME", "YEAR", "SET"
                 );
 
                 System.out.printf(
-                    "%-15s %-15s %-30s %-20s %-10s %-12s %-30s %-10s %-10s%n",
+                    "%-20s %-15s %-30s %-20s %-10s %-12s %-30s %-10s %-10s%n",
                     borrowedBook.getTransactionNumber(),
                     borrowedBook.getBook().getBookNumber(),
                     borrowedBook.getBook().getBookTitle(),
@@ -253,7 +256,7 @@ public class ManageBorrowedBook {
         }
 
         if (!found) {            
-            System.out.println("Borrowed book not found.");
+            System.out.println("\nNo borrowed books found.");
         }
     }
 }

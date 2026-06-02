@@ -11,7 +11,10 @@ public class Main {
     public static BloomFilter bookLocationFilter = new BloomFilter(1000);
     public static BloomFilter bookStatusFilter = new BloomFilter(1000);
     
-    public static BloomFilter bookBorrowedFilter = new BloomFilter(1000);
+    public static BloomFilter borrowedTransactionNumberFilter = new BloomFilter(1000);
+    public static BloomFilter borrowedBookNumberFilter = new BloomFilter(1000);
+    
+    public static BloomFilter studentNameFilter = new BloomFilter(1000);
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
