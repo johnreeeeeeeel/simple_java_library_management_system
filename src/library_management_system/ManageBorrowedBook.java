@@ -172,7 +172,7 @@ public class ManageBorrowedBook {
         System.out.println("BORROWED BOOK LIST");
 
         current = head;
-
+        
         while (current != null) {
             BorrowedBook borrowedBook = current.data;
 

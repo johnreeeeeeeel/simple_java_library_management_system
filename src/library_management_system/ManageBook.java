@@ -257,8 +257,6 @@ public class ManageBook {
 
         current = head;
 
-        int i = 1;
-
         while (current != null) {
             System.out.printf(
                 "\n%-15s %-15s %-30s %-20s %-12s %-12s%n",
@@ -276,7 +274,6 @@ public class ManageBook {
             );
 
             current = current.next;
-            i++;
         }
         
         if (head == null) {
