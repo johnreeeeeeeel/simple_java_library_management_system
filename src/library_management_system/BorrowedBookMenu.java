@@ -3,9 +3,7 @@ package library_management_system;
 import java.util.Scanner;
 
 public class BorrowedBookMenu {
-    Scanner scanner = new Scanner(System.in);
-
-    public void borrowedBookMenu() {
+    public void borrowedBookMenu(Scanner scanner) {
         int choice = 0;
         
         ManageBorrowedBook manageBorrowedBook = new ManageBorrowedBook();
@@ -32,19 +30,19 @@ public class BorrowedBookMenu {
             switch (choice) {
 
                 case 1:
-                    manageBorrowedBook.viewBorrowedBooks();
+                    manageBorrowedBook.viewBorrowedBooks(scanner);
                     break;
                     
                 case 2:
-                    manageBorrowedBook.searchBorrowedBook();
+                    manageBorrowedBook.searchBorrowedBook(scanner);
                     break;
 
                 case 3:
-                    manageBorrowedBook.borrowBook();
+                    manageBorrowedBook.borrowBook(scanner);
                     break;
 
                 case 4:
-                    manageBorrowedBook.returnBook();
+                    manageBorrowedBook.returnBook(scanner);
                     break;
 
                 case 5:

@@ -3,7 +3,7 @@ package library_management_system;
 import java.util.Scanner;
 
 public class Main {
-    // Public bloom filter 
+    // Bloom filter 
     public static BloomFilter bookIdFilter = new BloomFilter(1000);
     public static BloomFilter bookNumberFilter = new BloomFilter(1000);
     public static BloomFilter bookTitleFilter = new BloomFilter(1000);
@@ -16,9 +16,10 @@ public class Main {
     
     public static BloomFilter studentNameFilter = new BloomFilter(1000);
 
+    // Scanner
+    public static Scanner scanner = new Scanner(System.in);
+
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        
         int choice = 0;
 
         do {
@@ -44,15 +45,18 @@ public class Main {
                     System.out.println("LOGIN");
                     
                     System.out.print("Enter Username: ");
-                    String adminUsername = scanner.nextLine();
-
+                    String adminUsername = scanner.nextLine().trim();
+                    
                     System.out.print("Enter Password: ");
-                    String adminPassword = scanner.nextLine();
-
-                    if (adminUsername.equals("admin") && adminPassword.equals("admin")) {
+                    String adminPassword = scanner.nextLine().trim();
+                    
+                    if (adminUsername.isEmpty() || adminPassword.isEmpty()) {
+                        System.out.println("\nUsername or password cannot be empty.");
+                        
+                    } else if (adminUsername.equals("admin") && adminPassword.equals("admin")) {
                         MainMenu adminMenu = new MainMenu();
-                        adminMenu.mainMenu();
-
+                        adminMenu.mainMenu(scanner);
+                        
                     } else {
                         System.out.println("\nInvalid username or password.");
                     }

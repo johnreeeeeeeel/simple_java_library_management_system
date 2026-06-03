@@ -3,9 +3,7 @@ package library_management_system;
 import java.util.Scanner;
 
 public class BookMenu {
-    Scanner scanner = new Scanner(System.in);
-
-    public void bookMenu() {
+    public void bookMenu(Scanner scanner) {
         int choice = 0;
         
         ManageBook manageBook = new ManageBook();
@@ -33,23 +31,23 @@ public class BookMenu {
             switch (choice) {
 
                 case 1:
-                    manageBook.viewBooks();
+                    manageBook.viewBooks(scanner);
                     break;
                     
                 case 2:
-                    manageBook.searchBook();
+                    manageBook.searchBook(scanner);
                     break;
 
                 case 3:
-                    manageBook.addBook();
+                    manageBook.addBook(scanner);
                     break;
 
                 case 4:
-                    manageBook.updateBook();
+                    manageBook.updateBook(scanner);
                     break;
 
                 case 5:
-                    manageBook.deleteBook();
+                    manageBook.deleteBook(scanner);
                     break;
 
                 case 6:

@@ -1,0 +1,37 @@
+<changelist name="Uncommitted_changes_before_Interactive_in-memory_rebase_at_6_3_2026_1_07_PM_[Changes]" date="1780463243470" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Interactive_in-memory_rebase_at_6_3_2026_1_07_PM_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Interactive in-memory rebase at 6/3/2026 1:07 PM [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/library_management_system/library_management_system/BookMenu.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/library_management_system/library_management_system/Main.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/library_management_system/library_management_system/BorrowedBookNode.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/library_management_system/library_management_system/BorrowedBookMenu.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/library_management_system/library_management_system/BookNode.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/library_management_system/library_management_system/BorrowedBook.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/library_management_system/library_management_system/ManageBorrowedBook.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/library_management_system/library_management_system/BloomFilter.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/library_management_system/library_management_system/MainMenu.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/library_management_system/library_management_system/Book.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="out/production/library_management_system/library_management_system/ManageBook.class" />
+  </binary>
+</changelist>

@@ -2,14 +2,12 @@ package library_management_system;
 
 import java.util.*;
 
-public class ManageBorrowedBook {
-    Scanner scanner = new Scanner(System.in);
-    
+public class ManageBorrowedBook {    
     public static BorrowedBookNode head;
     public static BorrowedBookNode tail;
     public static BorrowedBookNode current;
         
-    public void borrowBook() {
+    public void borrowBook(Scanner scanner) {
         System.out.println("\n==============================");
         System.out.println("BORROW BOOK");
         
@@ -17,27 +15,50 @@ public class ManageBorrowedBook {
         int transactionNumber = 100000 + random.nextInt(900000);
 
         System.out.print("Enter student name: ");
-        String studentName = scanner.nextLine();
-
-        System.out.print("Enter student year: ");
-        String studentYear = scanner.nextLine();
-
-        System.out.print("Enter student set: ");
-        String studentSet = scanner.nextLine();
-
-        System.out.print("Enter book number: ");
-        String bookNumber = scanner.nextLine();
+        String studentName = scanner.nextLine().trim();
         
-        // Bloom filter validation
-        if (Main.borrowedBookNumberFilter.mightContain(bookNumber)) {
-            System.out.println("\nBook number " + bookNumber + " already borrowed.");
+        // Input validation
+        if (studentName.isEmpty()) {
+            System.out.println("\nStudent name cannot be empty.");
             return;
         }
+
+        System.out.print("Enter student year: ");
+        String studentYear = scanner.nextLine().trim();
         
-        // Bloom filter validation
-        if (!Main.bookNumberFilter.mightContain(bookNumber)) {
+        // Input validation
+        if (studentYear.isEmpty()) {
+            System.out.println("\nStudent year cannot be empty.");
+            return;
+        }
+
+        System.out.print("Enter student set: ");
+        String studentSet = scanner.nextLine().trim();
+        
+        // Validation
+        if (studentSet.isEmpty()) {
+            System.out.println("\nStudent set cannot be empty.");
+            return;
+        }
+
+        System.out.print("Enter book number: ");
+        String bookNumber = scanner.nextLine().trim();
+        
+        // Validation
+        if (bookNumber.isEmpty()) {
+            System.out.println("\nBook number cannot be empty.");
+            return;
+            
+        } else if (Main.borrowedBookNumberFilter.mightContain(bookNumber)) {
+            System.out.println("\nBook number " + bookNumber + " already borrowed.");
+            return;
+            
+        } else if (!Main.bookNumberFilter.mightContain(bookNumber)) {
             System.out.println("\nBook number " + bookNumber + " not found.");
             return;
+            
+        } else {
+            System.out.println("\nNo book found.");
         }
 
         BookNode current = ManageBook.head;
@@ -89,18 +110,22 @@ public class ManageBorrowedBook {
         );
     }
     
-    public void returnBook() {
+    public void returnBook(Scanner scanner) {
         System.out.println("\n==============================");
         System.out.println("RETURN BOOK");
 
         System.out.print("Enter book or transaction number: ");
         String input = scanner.nextLine().trim();
-
-        // Bloom filter validation 
-        if (!Main.borrowedBookNumberFilter.mightContain(input) && !Main.borrowedTransactionNumberFilter.mightContain(input)) {
+        
+        // Validation
+        if (input.isEmpty()) {
+            System.out.println("\nTransaction number cannot be empty.");
+            return;
+            
+        } else if (!Main.borrowedBookNumberFilter.mightContain(input) && !Main.borrowedTransactionNumberFilter.mightContain(input)) {
             System.out.println("\nBook/Transaction number " + input + " is not currently borrowed.");
             return;
-        }
+        }        
 
         current = head;
         boolean found = false;
@@ -126,7 +151,7 @@ public class ManageBorrowedBook {
                     current.next.prev = current.prev;
                 }
 
-                // Bloom filter updation
+                // Bloom filter update
                 Main.borrowedTransactionNumberFilter = new BloomFilter(1000);
                 Main.borrowedBookNumberFilter = new BloomFilter(1000);
                 Main.studentNameFilter = new BloomFilter(1000);
@@ -167,7 +192,7 @@ public class ManageBorrowedBook {
         }
     }
     
-    public void viewBorrowedBooks() {
+    public void viewBorrowedBooks(Scanner scanner) {
         System.out.println("\n==============================");
         System.out.println("BORROWED BOOK LIST");
 
@@ -177,18 +202,17 @@ public class ManageBorrowedBook {
             BorrowedBook borrowedBook = current.data;
 
             System.out.printf(
-                "\n%-20s %-15s %-30s %-20s %-10s %-12s %-30s %-10s %-10s%n",
-                "TRANSACTION NO.", "BOOK NO.", "TITLE", "AUTHOR", "LOCATION", "STATUS", "STUDENT NAME", "YEAR", "SET"
+                "\n%-20s %-15s %-30s %-20s %-10s %-30s %-10s %-10s%n",
+                "TRANSACTION NO.", "BOOK NO.", "TITLE", "AUTHOR", "LOCATION", "STUDENT NAME", "YEAR", "SET"
             );
 
             System.out.printf(
-                "%-20s %-15s %-30s %-20s %-10s %-12s %-30s %-10s %-10s%n",
+                "%-20s %-15s %-30s %-20s %-10s %-30s %-10s %-10s%n",
                 borrowedBook.getTransactionNumber(),
                 borrowedBook.getBook().getBookNumber(),
                 borrowedBook.getBook().getBookTitle(),
                 borrowedBook.getBook().getBookAuthor(),
                 borrowedBook.getBook().getBookLocation(),
-                borrowedBook.getBook().getBookStatus(),
                 borrowedBook.getStudentName(),
                 borrowedBook.getStudentYear(),
                 borrowedBook.getStudentSet()
@@ -202,7 +226,7 @@ public class ManageBorrowedBook {
         }
     }
     
-    public void searchBorrowedBook() {     
+    public void searchBorrowedBook(Scanner scanner) {     
         System.out.println("\n==============================");
         System.out.println("SEARCH BORROWED BOOK");
         
@@ -210,8 +234,12 @@ public class ManageBorrowedBook {
         System.out.print("Enter: ");
         String input = scanner.nextLine();
         
-        // Bloom filter validation
-        if (!Main.bookIdFilter.mightContain(input) && !Main.bookNumberFilter.mightContain(input) && !Main.bookTitleFilter.mightContain(input) && !Main.borrowedTransactionNumberFilter.mightContain(input) && !Main.studentNameFilter.mightContain(input)) {
+        // Validation
+        if (input.isEmpty()) {
+            System.out.println("\nInput cannot be empty.");
+            return;
+            
+        } else if (!Main.bookIdFilter.mightContain(input) && !Main.bookNumberFilter.mightContain(input) && !Main.bookTitleFilter.mightContain(input) && !Main.borrowedTransactionNumberFilter.mightContain(input) && !Main.studentNameFilter.mightContain(input)) {
             System.out.println("\n" + input + " not found.");
             return;
         }
@@ -232,18 +260,17 @@ public class ManageBorrowedBook {
                 System.out.println("\nRESULT");
 
                 System.out.printf(
-                    "\n%-20s %-15s %-30s %-20s %-10s %-12s %-30s %-10s %-10s%n",
-                    "TRANSACTION NO.", "BOOK NO.", "TITLE", "AUTHOR", "LOCATION", "STATUS", "STUDENT NAME", "YEAR", "SET"
+                    "\n%-20s %-15s %-30s %-20s %-10s %-30s %-10s %-10s%n",
+                    "TRANSACTION NO.", "BOOK NO.", "TITLE", "AUTHOR", "LOCATION", "STUDENT NAME", "YEAR", "SET"
                 );
 
                 System.out.printf(
-                    "%-20s %-15s %-30s %-20s %-10s %-12s %-30s %-10s %-10s%n",
+                    "%-20s %-15s %-30s %-20s %-10s %-30s %-10s %-10s%n",
                     borrowedBook.getTransactionNumber(),
                     borrowedBook.getBook().getBookNumber(),
                     borrowedBook.getBook().getBookTitle(),
                     borrowedBook.getBook().getBookAuthor(),
                     borrowedBook.getBook().getBookLocation(),
-                    borrowedBook.getBook().getBookStatus(),
                     borrowedBook.getStudentName(),
                     borrowedBook.getStudentYear(),
                     borrowedBook.getStudentSet()

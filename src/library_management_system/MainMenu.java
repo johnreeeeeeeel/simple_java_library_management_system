@@ -1,11 +1,9 @@
 package library_management_system;
 
-import java.util.Scanner;
+import java.util.*;
 
 public class MainMenu {
-    Scanner scanner = new Scanner(System.in);
-
-    public void mainMenu() {
+    public void mainMenu(Scanner scanner) {
         int choice = 0;
 
         do {
@@ -29,12 +27,12 @@ public class MainMenu {
 
                 case 1:
                     BookMenu bookMenu = new BookMenu();
-                    bookMenu.bookMenu();
+                    bookMenu.bookMenu(scanner);
                     break;
                     
                 case 2:
                     BorrowedBookMenu borrowedBookMenu = new BorrowedBookMenu();
-                    borrowedBookMenu.borrowedBookMenu();
+                    borrowedBookMenu.borrowedBookMenu(scanner);
                     break;
 
                 case 3:

@@ -3,13 +3,11 @@ package library_management_system;
 import java.util.*;
 
 public class ManageBook {
-    Scanner scanner = new Scanner(System.in);
-        
     public static BookNode head;
     public static BookNode tail;
     public static BookNode current;
 
-    public void addBook() {  
+    public void addBook(Scanner scanner) {
         System.out.println("\n==============================");
         System.out.println("ADD BOOK");
         
@@ -17,7 +15,13 @@ public class ManageBook {
         int bookId = 100000 + random.nextInt(900000);
 
         System.out.print("Enter book number: ");
-        String bookNumber = scanner.nextLine();
+        String bookNumber = scanner.nextLine().trim();
+        
+        // Input validation
+        if (bookNumber.isEmpty()) {
+            System.out.println("\nBook number cannot be empty.");
+            return;
+        }
 
         // Bloom filter validation
         if (Main.bookNumberFilter.mightContain(bookNumber)) {
@@ -34,13 +38,31 @@ public class ManageBook {
         }
         
         System.out.print("Enter book title: ");
-        String bookTitle = scanner.nextLine();
+        String bookTitle = scanner.nextLine().trim();
+        
+        // Input validation
+        if (bookTitle.isEmpty()) {
+            System.out.println("\nBook title cannot be empty.");
+            return;
+        }
 
         System.out.print("Enter book author: ");
-        String bookAuthor = scanner.nextLine();
+        String bookAuthor = scanner.nextLine().trim();
+        
+        // Input validation
+        if (bookAuthor.isEmpty()) {
+            System.out.println("\nBook author cannot be empty.");
+            return;
+        }
         
         System.out.print("Enter book location: ");
-        String bookLocation = scanner.nextLine();
+        String bookLocation = scanner.nextLine().trim();
+        
+        // Input validation
+        if (bookLocation.isEmpty()) {
+            System.out.println("\nBook location cannot be empty.");
+            return;
+        }
         
         Book book = new Book(bookId, bookNumber, bookTitle, bookAuthor, bookLocation, null);
         book.setBookStatus("Available");
@@ -83,12 +105,20 @@ public class ManageBook {
         );
     }
 
-    public void updateBook() {
+    public void updateBook(Scanner scanner) {
         System.out.println("\n==============================");
         System.out.println("UPDATE BOOK");
         
         System.out.print("Enter Book ID: ");
-        int bookId = Integer.parseInt(scanner.nextLine());
+        String input = scanner.nextLine().trim();
+        
+        // Input validation
+        if (input.isEmpty()) {
+            System.out.println("\nBook ID cannot be empty.");
+            return;
+        }
+        
+        int bookId = Integer.parseInt(input);
         
         // Bloom filter validation
         if (!Main.bookIdFilter.mightContain(String.valueOf(bookId))) {
@@ -144,6 +174,29 @@ public class ManageBook {
                     current.data.setBookLocation(bookLocation);
                 }
                 
+                // Bloom filter update
+                Main.bookIdFilter = new BloomFilter(1000);
+                Main.bookNumberFilter = new BloomFilter(1000);
+                Main.bookTitleFilter = new BloomFilter(1000);
+                Main.bookAuthorFilter = new BloomFilter(1000);
+                Main.bookLocationFilter = new BloomFilter(1000);
+                Main.bookStatusFilter = new BloomFilter(1000);
+
+                BookNode temp = head;
+
+                while (temp != null) {
+                    Book book = temp.data;
+
+                    Main.bookIdFilter.add(String.valueOf(book.getBookId()));
+                    Main.bookNumberFilter.add(book.getBookNumber());
+                    Main.bookTitleFilter.add(book.getBookTitle());
+                    Main.bookAuthorFilter.add(book.getBookAuthor());
+                    Main.bookLocationFilter.add(book.getBookLocation());
+                    Main.bookStatusFilter.add(book.getBookStatus());
+
+                    temp = temp.next;
+                }
+                
                 System.out.println("\nBook updated successfully!");
                 
                 System.out.printf(
@@ -170,12 +223,20 @@ public class ManageBook {
         System.out.println("\nNo book found.");
     }
 
-    public void deleteBook() {     
+    public void deleteBook(Scanner scanner) {     
         System.out.println("\n==============================");
         System.out.println("DELETE BOOK");
 
         System.out.print("Enter Book ID: ");
-        int bookId = Integer.parseInt(scanner.nextLine());
+        String input = scanner.nextLine().trim();
+        
+        // Input validation
+        if (input.isEmpty()) {
+            System.out.println("\nBook ID cannot be empty.");
+            return;
+        }
+        
+        int bookId = Integer.parseInt(input);
         
         // Bloom filter validation
         if (!Main.bookIdFilter.mightContain(String.valueOf(bookId))) {
@@ -202,7 +263,7 @@ public class ManageBook {
                     current.next.prev = current.prev;
                 }
                 
-                // Bloom filter updation
+                // Bloom filter update
                 Main.bookIdFilter = new BloomFilter(1000);
                 Main.bookNumberFilter = new BloomFilter(1000);
                 Main.bookTitleFilter = new BloomFilter(1000);
@@ -251,7 +312,7 @@ public class ManageBook {
         System.out.println("\nNo book found.");
     }
     
-    public void viewBooks() {
+    public void viewBooks(Scanner scanner) {
         System.out.println("\n==============================");
         System.out.println("BOOK LIST");
 
@@ -281,13 +342,19 @@ public class ManageBook {
         }
     }
     
-    public void searchBook() {    
+    public void searchBook(Scanner scanner) {    
         System.out.println("\n==============================");
         System.out.println("SEARCH BOOK");
         
         System.out.println("Search By: Book ID, Number, Title, Author, Location, or Status.");
         System.out.print("Enter: ");
-        String input = scanner.nextLine();
+        String input = scanner.nextLine().trim();
+        
+        // Input validation
+        if (input.isEmpty()) {
+            System.out.println("\nInput cannot be empty.");
+            return;
+        }
         
         // Bloom filter validation
         if (!Main.bookIdFilter.mightContain(input) && !Main.bookNumberFilter.mightContain(input) && !Main.bookTitleFilter.mightContain(input) && !Main.bookAuthorFilter.mightContain(input) && !Main.bookLocationFilter.mightContain(input) && !Main.bookStatusFilter.mightContain(input)) {
